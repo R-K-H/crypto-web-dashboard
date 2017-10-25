@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   nginx:
     build: ./nginx
@@ -13,12 +13,3 @@ services:
       - "8080"
     volumes:
       - .:/app
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo
-    ports:
-      - "127.0.0.1:27017:27017"
-    volumes:
-      - ./mongo-data:/data/db
