@@ -1,1 +1,39 @@
-<h1> HI </h1>
+<!doctype>
+<html>
+<head>
+	
+</head>
+<body>
+	<h1> CTR Crypto Watchlist </h1>
+	<div id="market-data"></div>
+	<script type="text/javascript">
+		function insertAfter(newNode, referenceNode) {
+		    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+		}
+		var xhr = new XMLHttpRequest();
+		var remoteProtocol = 'http://';
+		if(location.protocol !== "undefined"){
+		  remoteProtocol = location.protocol;
+		}
+		var remoteUrl = remoteProtocol + "//0.0.0.0/market";
+		xhr.open('GET', remoteUrl, true);
+		xhr.withCredentials = true;
+		xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		xhr.onload = function() {
+		  if (xhr.status === 201) {
+		  	var currency = JSON.parse(xhr.responseText);
+		    //console.log(currency);
+		    
+		    for (var i = currency.length - 1; i >= 0; i--) {
+		    	var newDiv = document.createElement('div');
+		    	newDiv.id = currency[i].id;
+		    	var market_cap = currency[i].market_cap_usd !== null ? currency[i].market_cap_usd: 0;		    	
+		    	newDiv.innerHTML = ('<h1>'+currency[i].name+'</h1><h2>$' + currency[i].price_usd + ' $' + market_cap +'</h2>');
+		    	document.getElementById('market-data').after(newDiv);
+		    }
+		  }
+		};
+		xhr.send();
+	</script>
+</body>
+</html>
