@@ -108,23 +108,25 @@ export default class Hello extends Component {
         <LazyLoad key={i}>
         	<div className="col-sm-6 col-md-4" key={i}>
 		    	<div className="card m-3">
-		    		<div className="card-header bg-success text-white">{currency.name}</div>
+		    		<div className="card-header bg-success text-white dropdown"><a className="dropdown-toggle" data-toggle="collapse" href={'#'+currency.name} aria-expanded="false" aria-controls={currency.name}>{currency.name}</a></div>
 		    		<div className="card-body">
 		    			<h6 className="card-title">Price</h6>
 		    			<h1 className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
 		    		</div>
-		    		<ul className="list-group list-group-flush">
-					    <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(currency.market_cap_usd, { code: 'USD' })}</li>
-					    <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
-					    <li className="list-group-item"><h6>1Hour Change</h6> {currency.percent_change_1h}%</li>
-					    <li className="list-group-item"><h6>24Hour Change</h6> {currency.percent_change_24h}%</li>
-					    <li className="list-group-item"><h6>7Hour Change</h6> {currency.percent_change_7d}%</li>
-					  </ul>
-					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} options={this.state.options} data={this.state.data} /></div>
-		    		<div className="card-footer text-muted text-center">
-		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
-		    		</div>
-		    	</div>
+            <div className="collapse" id={currency.name}>
+  		    		<ul className="list-group list-group-flush" >
+  					    <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(currency.market_cap_usd, { code: 'USD' })}</li>
+  					    <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
+  					    <li className="list-group-item"><h6>1Hour Change</h6> {currency.percent_change_1h}%</li>
+  					    <li className="list-group-item"><h6>24Hour Change</h6> {currency.percent_change_24h}%</li>
+  					    <li className="list-group-item"><h6>7Hour Change</h6> {currency.percent_change_7d}%</li>
+  					  </ul>
+  					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} options={this.state.options} data={this.state.data} /></div>
+  		    		<div className="card-footer text-muted text-center">
+  		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
+  		    		</div>
+  		    	</div>
+          </div>
 		    </div>
 		   </LazyLoad>
 				))):(
@@ -132,23 +134,25 @@ export default class Hello extends Component {
         <LazyLoad key={i}>
         	<div className="col-sm-6 col-md-4" key={i}>
 		    	<div className="card m-3">
-		    		<div className="card-header bg-success text-white">{currency.name}</div>
-		    		<div className="card-body">
+		    		<div className="card-header bg-success text-white dropdown"><a className="dropdown-toggle" data-toggle="collapse" href={'#'+currency.name} aria-expanded="false" aria-controls={currency.name}>{currency.name}</a></div>
+            <div className="card-body">
 		    			<h6 className="card-title">Price</h6>
-		    			<h1 className="card-title text-center">{currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
+		    			<h1 className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
 		    		</div>
-		    		<ul className="list-group list-group-flush">
-					    <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(currency.market_cap_usd, { code: 'USD' })}</li>
-					    <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
-					    <li className="list-group-item"><h6>1Hour Change</h6> {currency.percent_change_1h}%</li>
-					    <li className="list-group-item"><h6>24Hour Change</h6> {currency.percent_change_24h}%</li>
-					    <li className="list-group-item"><h6>7Hour Change</h6> {currency.percent_change_7d}%</li>
-					  </ul>
-					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} data={this.state.data} options={this.state.options}/></div>
-		    		<div className="card-footer text-muted text-center">
-		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
-		    		</div>
-		    	</div>
+            <div className="collapse" id={currency.name}>
+  		    		<ul className="list-group list-group-flush">
+  					    <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(currency.market_cap_usd, { code: 'USD' })}</li>
+  					    <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
+  					    <li className="list-group-item"><h6>1Hour Change</h6> {currency.percent_change_1h}%</li>
+  					    <li className="list-group-item"><h6>24Hour Change</h6> {currency.percent_change_24h}%</li>
+  					    <li className="list-group-item"><h6>7Hour Change</h6> {currency.percent_change_7d}%</li>
+  					  </ul>
+  					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} data={this.state.data} options={this.state.options}/></div>
+  		    		<div className="card-footer text-muted text-center">
+  		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
+  		    		</div>
+  		    	</div>
+          </div>
 		    </div>
 		    </LazyLoad>
 			)))
