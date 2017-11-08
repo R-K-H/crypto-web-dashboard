@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
+import { findDOMNode, render } from 'react-dom';
 import moment from 'moment';
 import currencyFormatter from 'currency-formatter';
 import SearchInput, {createFilter} from 'react-search-input';
@@ -63,6 +63,32 @@ export default class Hello extends Component {
 	    this.searchUpdated = this.searchUpdated.bind(this)
   	}
 
+  componentWillUpdate(nextProps, nextState) {
+    var oldState = this.state.currencies;
+    if (oldState.length > 0) {
+      for (var i in nextState.currencies) {
+        var refName = 'price-' + oldState[i].id;
+        var el = findDOMNode(this.refs[refName]);
+
+        if (nextState.currencies[i].price_usd != oldState[i].price_usd) {
+          if ( nextState.currencies[i].price_usd > oldState[i].price_usd ) {
+            $(el).animate({
+              backgroundColor: "rgba(90,151,112,0.3)"
+            }, 300).animate({
+              backgroundColor: "rgba(255,255,255,0)"
+            }, 5e3);
+          } else {
+            $(el).animate({
+              backgroundColor: "rgba(204,63,51,0.3)"
+            }, 300).animate({
+              backgroundColor: "rgba(255,255,255,0)"
+            }, 5e3);
+          }
+        }
+      }
+    }
+  }
+
   componentDidMount() {
     this.ws = new WebSocket('ws://0.0.0.0/socket')
     this.ws.onmessage = e => this.setState({ currencies: Object.values(JSON.parse(e.data)) })
@@ -85,7 +111,9 @@ export default class Hello extends Component {
     this.setState({changed: true});
 	}
 
-
+  handlePriceChange(evt) {
+    console.log(evt)
+  }
 
   render() {
   	var filteredCurrencies = this.state.currencies.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
@@ -111,7 +139,7 @@ export default class Hello extends Component {
 		    		<div className="card-header bg-success text-white dropdown"><a className="dropdown-toggle" data-toggle="collapse" href={'#'+currency.name} aria-expanded="false" aria-controls={currency.name}>{currency.name}</a></div>
 		    		<div className="card-body">
 		    			<h6 className="card-title">Price</h6>
-		    			<h1 className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
+		    			<h1 ref={ 'price-' + currency.id} onChange={this.handlePriceChange} className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
 		    		</div>
             <div className="collapse" id={currency.name}>
   		    		<ul className="list-group list-group-flush" >
@@ -123,7 +151,7 @@ export default class Hello extends Component {
   					  </ul>
   					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} options={this.state.options} data={this.state.data} /></div>
   		    		<div className="card-footer text-muted text-center">
-  		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
+  		    			<span className="card-text">{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
   		    		</div>
   		    	</div>
           </div>
@@ -137,7 +165,7 @@ export default class Hello extends Component {
 		    		<div className="card-header bg-success text-white dropdown"><a className="dropdown-toggle" data-toggle="collapse" href={'#'+currency.name} aria-expanded="false" aria-controls={currency.name}>{currency.name}</a></div>
             <div className="card-body">
 		    			<h6 className="card-title">Price</h6>
-		    			<h1 className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
+		    			<h1 ref={ 'price-' + currency.id} onChange={this.handlePriceChange} className="card-title text-center">{currency.price_usd < 1 ? currencyFormatter.format(currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(currency.price_usd, { code: 'USD' })}</h1>
 		    		</div>
             <div className="collapse" id={currency.name}>
   		    		<ul className="list-group list-group-flush">
@@ -149,7 +177,7 @@ export default class Hello extends Component {
   					  </ul>
   					  <div className="card-body" style={{height:100 +'px', width: 'content-box'}}><ChartJS type={this.state.type} data={this.state.data} options={this.state.options}/></div>
   		    		<div className="card-footer text-muted text-center">
-  		    			<span className="card-text" onChange={this.handleChange}>{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
+  		    			<span className="card-text">{moment.unix(currency.last_updated).format('MMM D YYYY H:mm')}</span>
   		    		</div>
   		    	</div>
           </div>
