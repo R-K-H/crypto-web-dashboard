@@ -6,6 +6,8 @@ services:
       - "80:80"
     depends_on:
       - node
+    volumes:
+      - ./nginx-certs:/etc/nginx/certs
 
   node:
     build: .
