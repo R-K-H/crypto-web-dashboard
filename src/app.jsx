@@ -19,11 +19,11 @@ export default class Market extends Component {
   	}
 
   componentDidMount() {
-    this.ws = new WebSocket('ws://0.0.0.0/socket')
+    this.ws = new WebSocket('ws://node/socket')
     this.ws.onmessage = e => this.setState({ currencies: Object.values(JSON.parse(e.data)) })
     this.ws.onerror = e => this.setState({ error: 'WebSocket error' })
     this.ws.onclose = e => !e.wasClean && this.setState({ error: `WebSocket error: ${e.code} ${e.reason}` })
-    fetch('http://0.0.0.0/v1/market.json')
+    fetch('http://node/v1/market.json')
     .then(results => {
     	return results.json();
     })
