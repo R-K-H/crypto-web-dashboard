@@ -30,47 +30,28 @@ function heartbeat() {
   this.isAlive = true;
 }
 
-wss.broadcast = function broadcast(data) {
-  wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      setInterval(function() {
-      console.log('tick')
-      client.getTicker({convert: 'USD'})
-      .then(result => {
-        client.send(data);
-      })
-      .catch(err => {
-        console.log(err)
-        ws.send(err)
-      })
-    }, 60000);
-      
-    }
-  });
-};
-
 wss.on('connection', function connection(ws) {
   ws.isAlive = true;
   ws.on('pong', heartbeat);
-
-  ws.on('message', function incoming(data) {
-    // Broadcast to everyone else.
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
-      }
-    });
-  });
 });
 
 const interval = setInterval(function ping() {
   wss.clients.forEach(function each(ws) {
     if (ws.isAlive === false) return ws.terminate();
- 
+    console.log('tick')
+    client.getTicker({convert: 'USD'})
+    .then(result => {
+      ws.send(JSON.stringify(result));
+      ws.ping('', false, true);
+    })
+    .catch(err => {
+      console.log(err)
+      ws.send(err)
+    })
     ws.isAlive = false;
     ws.ping('', false, true);
   });
-}, 30000);
+}, 60000);
 
 // Routes
 app.get('/', function (req, res) {

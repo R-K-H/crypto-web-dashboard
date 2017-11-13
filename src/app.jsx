@@ -46,12 +46,12 @@ export default class Market extends Component {
             <a onClick={() => this.setState({ error: null })} className="pull-right">x</a>
             {this.state.error}
           </div>}
-          <form>
-  			<div className="form-group">
+        <form>
+  			 <div className="md-form">
           	<SearchInput className="search-input form-control-lg w-100" onChange={this.searchUpdated} />
-          	</div>
-          	</form>
-        <div className="row">
+          </div>
+        </form>
+        <div className="row card-deck">
         	{ this.state.searchTerm === '' ? (
         		this.state.currencies.slice(0, 50).map((currency,i) => (
               <Card key={i} parentKey={i} currency={currency}/>
