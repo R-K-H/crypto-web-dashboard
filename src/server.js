@@ -39,6 +39,7 @@ const interval = setInterval(function ping() {
   wss.clients.forEach(function each(ws) {
     if (ws.isAlive === false) return ws.terminate();
     console.log('tick')
+    ws.isAlive = false;
     client.getTicker({convert: 'USD'})
     .then(result => {
       ws.send(JSON.stringify(result));
@@ -47,8 +48,8 @@ const interval = setInterval(function ping() {
     .catch(err => {
       console.log(err)
       ws.send(err)
+      ws.ping('', false, true);
     })
-    ws.isAlive = false;
     ws.ping('', false, true);
   });
 }, 60000);
