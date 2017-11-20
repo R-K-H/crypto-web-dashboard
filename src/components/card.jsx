@@ -51,46 +51,82 @@ class Card extends Component {
         }
     }
     this.state = {
+      currency: [],
+      parentKey: null,
       changed: false,
+      animationClass: '',
       data: data,
           type: 'line',
           options: options
     }
   }
-handleChange(evt) {
+
+  handleChange(evt) {
     //input was changed, update component state (or call parent method if child)
     this.setState({changed: true});
   }
 
- render() {
+  componentDidMount() {
+    this.setState({
+      currency: this.props.currency,
+      parentKey: this.props.parentKey
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.currency.price_usd != nextProps.currency.price_usd) {
+      if (nextProps.currency.price_usd > this.state.currency.price_usd) {
+        this.setState({
+          animationClass : 'tick-up'
+        })
+      } else {
+        this.setState({
+          animationClass : 'tick-down'
+        })
+      }
+
+      setTimeout(function(){
+        this.setState({
+          animationClass : ''
+        })
+      }.bind(this), 1800)
+    }
+
+    this.setState({
+      currency: nextProps.currency,
+      parentKey: nextProps.parentKey
+    })
+  }
+
+  render() {
   return (
-    <LazyLoad key={this.props.parentKey} height={180}>
-          <div className="col-lg-3 col-md-6 mb-r" key={this.props.parentKey}>
+    <LazyLoad key={this.state.parentKey} height={180}>
+          <div className="col-lg-3 col-md-6 mb-r" key={this.state.parentKey}>
           <div className="card card-cascade narrower">
             <div className="view gradient-card-header blue-gradient">
               <h2 className="text-white dropdown h2-responsive">
-              <a className="dropdown-toggle" data-toggle="collapse" href={'#'+this.props.currency.id} aria-expanded="false" aria-controls={this.props.currency.id}>
-                {this.props.currency.name}
+              <a className="dropdown-toggle" data-toggle="collapse" href={'#'+this.state.currency.id} aria-expanded="false" aria-controls={this.state.currency.id}>
+                {this.state.currency.name}
               </a>
             </h2>
             </div>
             <div className="card-body">
               <h6 className="card-title">Price</h6>
-              <h1 className="card-title text-center">{this.props.currency.price_usd < 1 ? currencyFormatter.format(this.props.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.props.currency.price_usd, { code: 'USD' })}</h1>
+              <h1 ref={ 'price-' + this.state.currency.id} className={ this.state.animationClass +  " card-title text-center"}>{this.state.currency.price_usd < 1 ? currencyFormatter.format(this.state.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.state.currency.price_usd, { code: 'USD' })}</h1>
             </div>
-            <div className="collapse" id={this.props.currency.id}>
+            <div className="collapse" id={this.state.currency.id}>
               <ul className="list-group list-group-flush">
-                <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(this.props.currency.market_cap_usd, { code: 'USD' })}</li>
-                <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(this.props.currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
-                <li className="list-group-item"><h6>1Hour Change</h6> {this.props.currency.percent_change_1h}%</li>
-                <li className="list-group-item"><h6>24Hour Change</h6> {this.props.currency.percent_change_24h}%</li>
-                <li className="list-group-item"><h6>7Hour Change</h6> {this.props.currency.percent_change_7d}%</li>
+                <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(this.state.currency.market_cap_usd, { code: 'USD' })}</li>
+                <li className="list-group-item"><h6>24hr Volume</h6> {currencyFormatter.format(this.state.currency['24h_volume_usd'], {symbol: '',decimal: '.',thousand: ',',precision: 2,format: '%v'})}</li>
+                <li className="list-group-item"><h6>1Hour Change</h6> {this.state.currency.percent_change_1h}%</li>
+                <li className="list-group-item"><h6>24Hour Change</h6> {this.state.currency.percent_change_24h}%</li>
+                <li className="list-group-item"><h6>7Hour Change</h6> {this.state.currency.percent_change_7d}%</li>
               </ul>
               <div className="card-body" style={{height:100 +'px', width: 'content-box'}}>
                 <ChartJS type={this.state.type} data={this.state.data} options={this.state.options}/>
                 </div>
               <div className="card-footer text-muted text-center">
-                <span className="card-text">{moment.unix(this.props.currency.last_updated).format('MMM D YYYY H:mm')}</span>
+                <span className="card-text">{moment.unix(this.state.currency.last_updated).format('MMM D YYYY H:mm')}</span>
               </div>
             </div>
           </div>
