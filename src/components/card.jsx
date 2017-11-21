@@ -55,9 +55,10 @@ class Card extends Component {
       parentKey: null,
       changed: false,
       animationClass: '',
+      percentChange: [],
       data: data,
-          type: 'line',
-          options: options
+      type: 'line',
+      options: options
     }
   }
 
@@ -73,15 +74,31 @@ class Card extends Component {
     })
   }
 
+  calculatePercentChange(oldAmount, newAmount) {
+    var change = (newAmount - oldAmount) / newAmount * 100;
+
+    return change.toFixed(2);
+  }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.currency.price_usd != nextProps.currency.price_usd) {
+      var change = this.calculatePercentChange(this.state.currency.price_usd, nextProps.currency.price_usd);
+
       if (nextProps.currency.price_usd > this.state.currency.price_usd) {
         this.setState({
-          animationClass : 'tick-up'
+          animationClass : 'tick-up',
+          percentChange : {
+            change : change,
+            changeClass: 'up'
+          }
         })
       } else {
         this.setState({
-          animationClass : 'tick-down'
+          animationClass : 'tick-down',
+          percentChange : {
+            change : change,
+            changeClass: 'down'
+          }
         })
       }
 
@@ -99,6 +116,11 @@ class Card extends Component {
   }
 
   render() {
+  var percentChange = '';
+  if (typeof this.state.percentChange.change != 'undefined' && typeof this.state.percentChange.changeClass != 'undefined') {
+    percentChange = (<small className="percentChange">{ this.state.percentChange.change }% <i className={ 'fa fa-caret-' + this.state.percentChange.changeClass }></i></small>)
+  }
+
   return (
     <LazyLoad key={this.state.parentKey} height={180}>
           <div className="col-lg-3 col-md-6 mb-r" key={this.state.parentKey}>
@@ -112,7 +134,7 @@ class Card extends Component {
             </div>
             <div className="card-body">
               <h6 className="card-title">Price</h6>
-              <h1 ref={ 'price-' + this.state.currency.id} className={ this.state.animationClass +  " card-title text-center"}>{this.state.currency.price_usd < 1 ? currencyFormatter.format(this.state.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.state.currency.price_usd, { code: 'USD' })}</h1>
+              <h1 ref={ 'price-' + this.state.currency.id} className={ this.state.animationClass +  " card-title text-center"}>{this.state.currency.price_usd < 1 ? currencyFormatter.format(this.state.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.state.currency.price_usd, { code: 'USD' })} { percentChange }</h1>
             </div>
             <div className="collapse" id={this.state.currency.id}>
               <ul className="list-group list-group-flush">

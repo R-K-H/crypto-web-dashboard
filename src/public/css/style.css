@@ -46,11 +46,19 @@ h2 a:hover{
 }
 
 h1.card-title {
+    font-size: 1.7rem;
     background-color: #fff;
+    text-align: left!important;
     -webkit-transition: background-color 2.5s ease-out;
     -moz-transition: background-color 2.5s ease-out;
     -o-transition: background-color 2.5s ease-out;
     transition: background-color 2.5s ease-out;
+}
+
+h1.card-title small {
+    display: inline-block;
+    font-size: 12px;
+    vertical-align: middle;
 }
 
 h1.card-title.tick-up {
