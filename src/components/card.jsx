@@ -122,8 +122,7 @@ class Card extends Component {
   }
 
   return (
-    <LazyLoad key={this.state.parentKey} height={180}>
-          <div className="col-lg-3 col-md-6 mb-r" key={this.state.parentKey}>
+        <div className="col-lg-3 col-md-6 mb-r" key={this.state.parentKey}>
           <div className="card card-cascade narrower">
             <div className="view gradient-card-header blue-gradient">
               <h2 className="text-white dropdown h2-responsive">
@@ -136,6 +135,7 @@ class Card extends Component {
               <h6 className="card-title">Price</h6>
               <h1 ref={ 'price-' + this.state.currency.id} className={ this.state.animationClass +  " card-title text-center"}>{this.state.currency.price_usd < 1 ? currencyFormatter.format(this.state.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.state.currency.price_usd, { code: 'USD' })} { percentChange }</h1>
             </div>
+            <LazyLoad key={this.state.parentKey} height={0}>
             <div className="collapse" id={this.state.currency.id}>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(this.state.currency.market_cap_usd, { code: 'USD' })}</li>
@@ -151,9 +151,9 @@ class Card extends Component {
                 <span className="card-text">{moment.unix(this.state.currency.last_updated).format('MMM D YYYY H:mm')}</span>
               </div>
             </div>
+            </LazyLoad>
           </div>
         </div>
-        </LazyLoad>
       )
   }
 }
