@@ -135,7 +135,7 @@ class Card extends Component {
               <h6 className="card-title">Price</h6>
               <h1 ref={ 'price-' + this.state.currency.id} className={ this.state.animationClass +  " card-title text-center"}>{this.state.currency.price_usd < 1 ? currencyFormatter.format(this.state.currency.price_usd, { precision: 4, code: 'USD' }) : currencyFormatter.format(this.state.currency.price_usd, { code: 'USD' })} { percentChange }</h1>
             </div>
-            <LazyLoad key={this.state.parentKey} height={0}>
+            <LazyLoad key={this.state.parentKey} once height={0}>
             <div className="collapse" id={this.state.currency.id}>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item"><h6>Market Cap</h6> {currencyFormatter.format(this.state.currency.market_cap_usd, { code: 'USD' })}</li>
